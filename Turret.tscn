@@ -46,8 +46,10 @@ anims/fire = SubResource( 3 )
 rotation = 1.5708
 texture = ExtResource( 1 )
 hframes = 8
-frame = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 34, 0 )
 shape = SubResource( 4 )
+
+[node name="EndOfBarrel" type="Position2D" parent="."]
+position = Vector2( 49, 0 )
