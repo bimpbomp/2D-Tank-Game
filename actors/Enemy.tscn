@@ -21,7 +21,4 @@ shape = SubResource( 1 )
 
 [node name="Turret" parent="." instance=ExtResource( 2 )]
 
-[node name="AttackCooldown" type="Timer" parent="."]
-one_shot = true
-
 [node name="Health" parent="." instance=ExtResource( 4 )]

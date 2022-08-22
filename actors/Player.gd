@@ -19,8 +19,6 @@ onready var health_stat = $Health
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.add_collision_exception_with(tank_turret)
-	turret_animation_player.connect("animation_finished", self, "_make_ready_to_fire", ["fire"])
 	turret.connect("turret_fired", self, "fire")
 
 
@@ -50,8 +48,8 @@ func _physics_process(delta):
 		
 		# feel like i will need to move the actual firing code to a separate location
 		# so it can be reused for enemies also
-		if tank_turret != null:
-			tank_turret.look_at(get_global_mouse_position())
+		if turret != null:
+			turret.look_at(get_global_mouse_position())
 
 	else:
 		queue_free()
@@ -69,7 +67,3 @@ func fire(bullet_instance, location: Vector2, direction: Vector2):
 func handle_hit():
 	health_stat.health -= 20
 	print("Player hit. Health ", health_stat.health)
-
-
-func _make_ready_to_fire(_a, _b):
-	ready_to_fire = true
