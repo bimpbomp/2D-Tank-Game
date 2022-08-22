@@ -25,7 +25,7 @@ func _physics_process(delta):
 
 func set_direction(direction: Vector2):
 	self.direction = direction
-	rotation += direction.angle()
+	rotation += self.direction.angle()
 
 
 func _on_KillTimer_timeout():

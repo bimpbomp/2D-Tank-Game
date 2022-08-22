@@ -1,4 +1,5 @@
 extends KinematicBody2D
+class_name Player
 
 
 signal player_fired_bullet(bullet, position, direction)
@@ -6,29 +7,21 @@ signal player_fired_bullet(bullet, position, direction)
 export (int) var speed = 100
 # rotation speed in degrees (converted to radians) per second
 export (float) var rotate_speed = 80 * PI/180
-export (PackedScene) var Bullet
+
 
 var velocity := Vector2()
 var rotation_velocity : float = 0
 
 
-var ready_to_fire := true
-
-
-var health := 100
-
-
-onready var tank_turret : KinematicBody2D = $Turret
-onready var turret_animation_player : AnimationPlayer = $Turret/AnimationPlayer
-onready var end_of_gun : Position2D = $Turret/EndOfBarrel
-onready var gun_direction : Position2D = $Turret/GunDirection
-onready var attack_cooldown : Timer = $AttackCooldown
+onready var turret = $Turret
+onready var health_stat = $Health
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.add_collision_exception_with(tank_turret)
 	turret_animation_player.connect("animation_finished", self, "_make_ready_to_fire", ["fire"])
+	turret.connect("turret_fired", self, "fire")
 
 
 func _physics_process(delta):
@@ -66,26 +59,16 @@ func _physics_process(delta):
 
 func _unhandled_input(event):
 	if event.is_action_pressed("fire"):
-		fire()
+		turret.fire()
 
 
-func fire():
+func fire(bullet_instance, location: Vector2, direction: Vector2):
+	emit_signal("player_fired_bullet", bullet_instance, location, direction)
 
-
-	if ready_to_fire and attack_cooldown.is_stopped():
-		# start the animation, prevent more firing until animation has finished
-		turret_animation_player.play("fire")
-		ready_to_fire = false
-		
-		var bullet_instance = Bullet.instance()
-		var direction = end_of_gun.global_position.direction_to(gun_direction.global_position).normalized()
-		emit_signal("player_fired_bullet", bullet_instance, end_of_gun.global_position, direction)
-		attack_cooldown.start()
-		
 
 func handle_hit():
-	health -= 20
-	print("Player hit. Health ", health)
+	health_stat.health -= 20
+	print("Player hit. Health ", health_stat.health)
 
 
 func _make_ready_to_fire(_a, _b):

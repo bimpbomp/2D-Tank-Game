@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/ground_shaker_asset/Red/Bodies/body_tracks.png" type="Texture" id=1]
-[ext_resource path="res://Turret.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Enemy.gd" type="Script" id=3]
+[ext_resource path="res://weapons/Turret.tscn" type="PackedScene" id=2]
+[ext_resource path="res://actors/Enemy.gd" type="Script" id=3]
+[ext_resource path="res://actors/Health.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 40, 36 )
@@ -22,3 +23,5 @@ shape = SubResource( 1 )
 
 [node name="AttackCooldown" type="Timer" parent="."]
 one_shot = true
+
+[node name="Health" parent="." instance=ExtResource( 4 )]
