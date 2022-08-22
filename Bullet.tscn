@@ -20,4 +20,5 @@ shape = SubResource( 5 )
 [node name="KillTimer" type="Timer" parent="."]
 wait_time = 5.0
 
+[connection signal="body_entered" from="." to="." method="_on_Bullet_body_entered"]
 [connection signal="timeout" from="KillTimer" to="." method="_on_KillTimer_timeout"]

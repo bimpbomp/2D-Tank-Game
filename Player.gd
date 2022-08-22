@@ -15,6 +15,9 @@ var rotation_velocity : float = 0
 var ready_to_fire := true
 
 
+var health := 100
+
+
 onready var tank_turret : KinematicBody2D = $Turret
 onready var turret_animation_player : AnimationPlayer = $Turret/AnimationPlayer
 onready var end_of_gun : Position2D = $Turret/EndOfBarrel
@@ -78,6 +81,11 @@ func fire():
 		var direction = end_of_gun.global_position.direction_to(gun_direction.global_position).normalized()
 		emit_signal("player_fired_bullet", bullet_instance, end_of_gun.global_position, direction)
 		attack_cooldown.start()
+		
+
+func handle_hit():
+	health -= 20
+	print("Player hit. Health ", health)
 
 
 func _make_ready_to_fire(_a, _b):
