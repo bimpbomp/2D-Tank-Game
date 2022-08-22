@@ -17,6 +17,7 @@ var tankTurret : KinematicBody2D
 func _ready():
 	tankBody = get_node_or_null(".")
 	tankTurret = get_node_or_null("Turret")
+	tankBody.add_collision_exception_with(tankTurret)
 
 
 func _physics_process(delta):
@@ -47,7 +48,14 @@ func _physics_process(delta):
 		# so it can be reused for enemies also
 		if tankTurret != null:
 			tankTurret.look_at(get_global_mouse_position())
-#			if Input.is_action_pressed("fire"):
-#				tankTurret._on_fire(tankBody)
+
 	else:
 		queue_free()
+		
+func _unhandled_input(event):
+	if event.is_action_pressed("fire"):
+		fire()
+
+func fire():
+	# tankTurret._on_fire(tankBody)
+	pass
