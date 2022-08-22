@@ -5,57 +5,57 @@ signal player_fired_bullet(bullet, position, direction)
 
 export (int) var speed = 100
 # rotation speed in degrees (converted to radians) per second
-export (float) var rotateSpeed = 80 * PI/180
+export (float) var rotate_speed = 80 * PI/180
 export (PackedScene) var Bullet
 
-var velDirection : int = 0
-var vel := Vector2()
-var rotationVelocity : float = 0
+var velocity := Vector2()
+var rotation_velocity : float = 0
 
 
-var readyToFire := true
+var ready_to_fire := true
 
 
-onready var tankTurret : KinematicBody2D = $Turret
-onready var turretAnimationPlayer : AnimationPlayer = $Turret/AnimationPlayer
-onready var endOfGun : Position2D = $Turret/EndOfBarrel
-onready var gunDirection : Position2D = $Turret/GunDirection
+onready var tank_turret : KinematicBody2D = $Turret
+onready var turret_animation_player : AnimationPlayer = $Turret/AnimationPlayer
+onready var end_of_gun : Position2D = $Turret/EndOfBarrel
+onready var gun_direction : Position2D = $Turret/GunDirection
+onready var attack_cooldown : Timer = $AttackCooldown
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.add_collision_exception_with(tankTurret)
-	turretAnimationPlayer.connect("animation_finished", self, "_make_ready_to_fire", ["fire"])
+	self.add_collision_exception_with(tank_turret)
+	turret_animation_player.connect("animation_finished", self, "_make_ready_to_fire", ["fire"])
 
 
 func _physics_process(delta):
 	if is_instance_valid(self):
 		# rotation inputs
-		rotationVelocity = 0
+		rotation_velocity = 0
 		if Input.is_action_pressed("turn_left"):
-			rotationVelocity -= rotateSpeed
+			rotation_velocity -= rotate_speed
 		if Input.is_action_pressed("turn_right"):
-			rotationVelocity += rotateSpeed
+			rotation_velocity += rotate_speed
 		
 		# apply rotation
-		rotate(rotationVelocity * delta)
+		rotate(rotation_velocity * delta)
 		
-		velDirection = 0
+		var vel_direction = 0
 		# movement inputs
 		if Input.is_action_pressed("move_forwards"):
-			velDirection += 1
+			vel_direction += 1
 		if Input.is_action_pressed("move_backwards"):
-			velDirection -= 1
+			vel_direction -= 1
 		
 		# applying velocity
-		if velDirection != 0:
-			vel = Vector2.RIGHT.rotated(rotation) * velDirection * speed
-			vel = move_and_slide(vel, Vector2.ZERO)
+		if vel_direction != 0:
+			velocity = Vector2.RIGHT.rotated(rotation) * vel_direction * speed
+			velocity = move_and_slide(velocity, Vector2.ZERO)
 		
 		# feel like i will need to move the actual firing code to a separate location
 		# so it can be reused for enemies also
-		if tankTurret != null:
-			tankTurret.look_at(get_global_mouse_position())
+		if tank_turret != null:
+			tank_turret.look_at(get_global_mouse_position())
 
 	else:
 		queue_free()
@@ -69,15 +69,16 @@ func _unhandled_input(event):
 func fire():
 
 
-	if readyToFire:
+	if ready_to_fire and attack_cooldown.is_stopped():
 		# start the animation, prevent more firing until animation has finished
-		turretAnimationPlayer.play("fire")
-		readyToFire = false
+		turret_animation_player.play("fire")
+		ready_to_fire = false
 		
 		var bullet_instance = Bullet.instance()
-		var direction = endOfGun.global_position.direction_to(gunDirection.global_position).normalized()
-		emit_signal("player_fired_bullet", bullet_instance, endOfGun.global_position, direction)
+		var direction = end_of_gun.global_position.direction_to(gun_direction.global_position).normalized()
+		emit_signal("player_fired_bullet", bullet_instance, end_of_gun.global_position, direction)
+		attack_cooldown.start()
 
 
 func _make_ready_to_fire(_a, _b):
-	readyToFire = true
+	ready_to_fire = true

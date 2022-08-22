@@ -20,3 +20,6 @@ position = Vector2( -1, 0 )
 shape = SubResource( 1 )
 
 [node name="Turret" parent="." instance=ExtResource( 3 )]
+
+[node name="AttackCooldown" type="Timer" parent="."]
+one_shot = true

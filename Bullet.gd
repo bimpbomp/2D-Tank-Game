@@ -5,14 +5,14 @@ class_name Bullet
 export (int) var speed = 300
 
 
-onready var killTimer = $KillTimer
+onready var kill_timer = $KillTimer
 
 
 var direction := Vector2.ZERO
 
 
 func _ready():
-	killTimer.start()
+	kill_timer.start()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
