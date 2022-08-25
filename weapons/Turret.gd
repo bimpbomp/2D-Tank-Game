@@ -25,7 +25,7 @@ func rotate_towards(location: Vector2):
 	global_rotation = lerp_angle(global_rotation, global_position.direction_to(location).angle(), 0.1)
 	
 func reset_rotation():
-	rotation = 0
+	rotation = lerp_angle(rotation, 0, 0.1)
 
 
 func fire():

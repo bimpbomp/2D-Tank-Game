@@ -38,6 +38,7 @@ func _physics_process(delta):
 	match current_state:
 		State.PATROL:
 			if not patrol_location_reached:
+				turret.reset_rotation()
 				actor.move_and_slide(actor_velocity)
 				actor.rotate_towards(patrol_location)
 				if actor.global_position.distance_to(patrol_location) < 5:
@@ -68,7 +69,6 @@ func set_state(new_state: int):
 		return
 		
 	if new_state == State.PATROL:
-		turret.reset_rotation()
 		origin = global_position
 		patrol_location_reached = true
 		patrol_timer.start()
