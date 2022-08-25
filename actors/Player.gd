@@ -2,8 +2,6 @@ extends KinematicBody2D
 class_name Player
 
 
-signal player_fired_bullet(bullet, position, direction)
-
 export (int) var speed = 100
 # rotation speed in degrees (converted to radians) per second
 export (float) var rotate_speed = 80 * PI/180
@@ -15,11 +13,6 @@ var rotation_velocity : float = 0
 
 onready var turret = $Turret
 onready var health_stat = $Health
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	turret.connect("turret_fired", self, "fire")
 
 
 func _physics_process(delta):
@@ -50,18 +43,12 @@ func _physics_process(delta):
 		# so it can be reused for enemies also
 		if turret != null:
 			turret.look_at(get_global_mouse_position())
+			
+		if Input.is_action_pressed("fire"):
+			turret.fire()
 
 	else:
 		queue_free()
-
-
-func _unhandled_input(event):
-	if event.is_action_pressed("fire"):
-		turret.fire()
-
-
-func fire(bullet_instance, location: Vector2, direction: Vector2):
-	emit_signal("player_fired_bullet", bullet_instance, location, direction)
 
 
 func handle_hit():

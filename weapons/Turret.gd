@@ -1,7 +1,6 @@
 extends Node2D
+class_name Turret
 
-
-signal turret_fired(bullet, location, direction)
 
 
 export (PackedScene) var Bullet
@@ -26,7 +25,7 @@ func fire():
 		
 		var bullet_instance = Bullet.instance()
 		var direction = end_of_gun.global_position.direction_to(gun_direction.global_position).normalized()
-		emit_signal("turret_fired", bullet_instance, end_of_gun.global_position, direction)
+		GlobalSignals.emit_signal("bullet_fired", bullet_instance, end_of_gun.global_position, direction)
 		attack_cooldown.start()
 
 func _make_ready_to_fire(_a, _b):
