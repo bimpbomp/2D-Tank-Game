@@ -31,7 +31,7 @@ var actor_velocity: Vector2 = Vector2.ZERO
 
 
 func _ready():
-	set_state(State.PATROL)
+	pass
 
 
 func _physics_process(delta):
@@ -46,10 +46,10 @@ func _physics_process(delta):
 					patrol_timer.start()
 		State.ENGAGE:
 			if player != null and turret != null:
-				var direction_to_player = turret.gun_facing_direction().direction_to(player.global_position)
-				turret.rotate_towards(direction_to_player)
+				turret.rotate_towards(player.global_position)
 				
-				if abs(turret.global_rotation - direction_to_player.angle()) < 0.1:
+				var angle_to_player = turret.global_position.direction_to(player.global_position).angle()
+				if abs(turret.global_rotation - angle_to_player) < 0.1:
 					turret.fire()
 			else:
 				print("Player or turret for enemy is null in ENGAGE state")
@@ -60,6 +60,7 @@ func _physics_process(delta):
 func initialise(actor, turret: Turret):
 	self.actor = actor
 	self.turret = turret
+	set_state(State.PATROL)
 
 
 func set_state(new_state: int):
@@ -67,6 +68,7 @@ func set_state(new_state: int):
 		return
 		
 	if new_state == State.PATROL:
+		turret.reset_rotation()
 		origin = global_position
 		patrol_location_reached = true
 		patrol_timer.start()
