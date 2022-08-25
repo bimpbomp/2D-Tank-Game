@@ -15,6 +15,14 @@ var ready_to_fire := true
 
 func _ready():
 	turret_animation_player.connect("animation_finished", self, "_make_ready_to_fire", ["fire"])
+	
+	
+func gun_facing_direction() -> Vector2:
+	return end_of_gun.global_position.direction_to(gun_direction.global_position).normalized()
+
+
+func rotate_towards(location: Vector2):
+	global_rotation = lerp(global_rotation, global_position.direction_to(location).angle(), 0.1)
 
 
 func fire():
@@ -24,7 +32,7 @@ func fire():
 		ready_to_fire = false
 		
 		var bullet_instance = Bullet.instance()
-		var direction = end_of_gun.global_position.direction_to(gun_direction.global_position).normalized()
+		var direction = gun_facing_direction()
 		GlobalSignals.emit_signal("bullet_fired", bullet_instance, end_of_gun.global_position, direction)
 		attack_cooldown.start()
 

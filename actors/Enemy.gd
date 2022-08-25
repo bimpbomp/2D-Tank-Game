@@ -6,8 +6,19 @@ onready var ai = $AI
 onready var turret = $Turret
 
 
+export (int) var speed = 100
+
+
 func _ready():
 	ai.initialise(self, turret)
+	
+
+func rotate_towards(location: Vector2):
+	rotation = lerp(rotation, global_position.direction_to(location).angle(), 0.1)
+	
+	
+func velocity_towards(location: Vector2) -> Vector2:
+	return global_position.direction_to(location) * speed
 	
 
 func handle_hit():

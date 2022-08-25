@@ -12,7 +12,7 @@ script = ExtResource( 4 )
 position = Vector2( 142, 84 )
 
 [node name="Enemy" parent="." instance=ExtResource( 5 )]
-position = Vector2( 353, 152 )
+position = Vector2( 347, 206 )
 
 [node name="BulletManager" type="Node2D" parent="."]
 script = ExtResource( 3 )
