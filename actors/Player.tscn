@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://actors/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/ground_shaker_asset/Blue/Bodies/body_tracks.png" type="Texture" id=2]
 [ext_resource path="res://weapons/Turret.tscn" type="PackedScene" id=3]
 [ext_resource path="res://actors/Health.tscn" type="PackedScene" id=4]
 [ext_resource path="res://weapons/Bullet.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Team.tscn" type="PackedScene" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 40, 36 )
@@ -24,3 +25,5 @@ shape = SubResource( 1 )
 Bullet = ExtResource( 5 )
 
 [node name="Health" parent="." instance=ExtResource( 4 )]
+
+[node name="Team" parent="." instance=ExtResource( 6 )]

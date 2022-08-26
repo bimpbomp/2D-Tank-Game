@@ -38,7 +38,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
-GlobalSignals="*res://globals/global_signals.gd"
+GlobalSignals="*res://globals/GlobalSignals.gd"
+GlobalConstants="*res://globals/GlobalConstants.gd"
 
 [display]
 

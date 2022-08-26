@@ -10,7 +10,6 @@ enum State {
 }
 
 
-onready var player_detection_zone = $PlayerDetectionZone
 onready var patrol_timer = $PatrolTimer
 
 
@@ -20,7 +19,8 @@ var turret: Turret = null
 
 
 # ENGAGE state
-var player: Player = null
+var target: KinematicBody2D = null
+var team: int = -1
 
 
 # PATROL state
@@ -46,10 +46,10 @@ func _physics_process(delta):
 					actor_velocity = Vector2.ZERO
 					patrol_timer.start()
 		State.ENGAGE:
-			if player != null and turret != null:
-				turret.rotate_towards(player.global_position)
+			if target != null and turret != null:
+				turret.rotate_towards(target.global_position)
 				
-				var angle_to_player = turret.global_position.direction_to(player.global_position).angle()
+				var angle_to_player = turret.global_position.direction_to(target.global_position).angle()
 				if abs(turret.global_rotation - angle_to_player) < 0.1:
 					turret.fire()
 			else:
@@ -58,9 +58,10 @@ func _physics_process(delta):
 			print("Error: state for enemy that shouldn't exist")
 
 
-func initialise(actor, turret: Turret):
-	self.actor = actor
-	self.turret = turret
+func initialise(new_actor: KinematicBody2D, new_turret: Turret, new_team: int):
+	self.actor = new_actor
+	self.turret = new_turret
+	self.team = new_team
 	set_state(State.PATROL)
 
 
@@ -77,18 +78,6 @@ func set_state(new_state: int):
 	emit_signal("state_changed", current_state)
 
 
-func _on_PlayerDetectionZone_body_entered(body):
-	if body.is_in_group("player"):
-		set_state(State.ENGAGE)
-		player = body
-
-
-func _on_PlayerDetectionZone_body_exited(body):
-	if player and body == player:
-		set_state(State.PATROL)
-		player = null
-
-
 func _on_PatrolTimer_timeout():
 	var patrol_range = 50
 	var random_x = rand_range(-patrol_range, patrol_range)
@@ -96,3 +85,15 @@ func _on_PatrolTimer_timeout():
 	patrol_location = Vector2(random_x, random_y) + origin
 	patrol_location_reached = false
 	actor_velocity = actor.velocity_towards(patrol_location)
+
+
+func _on_DetectionZone_body_entered(body):
+	if !target and body.has_method("get_team") and body.get_team() != self.team:
+		set_state(State.ENGAGE)
+		target = body
+
+
+func _on_DetectionZone_body_exited(body):
+	if target and body == target:
+		set_state(State.PATROL)
+		target = null

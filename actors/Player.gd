@@ -4,15 +4,21 @@ class_name Player
 
 export (int) var speed = 100
 # rotation speed in degrees (converted to radians) per second
-export (float) var rotate_speed = 80 * PI/180
+const DEGREES_TO_RADIANS := PI/180
+export (float) var rotate_speed = 80 * DEGREES_TO_RADIANS
 
 
 var velocity := Vector2()
 var rotation_velocity : float = 0
 
 
-onready var turret = $Turret
+onready var turret: Turret = $Turret
 onready var health_stat = $Health
+onready var team = $Team
+
+
+func _ready():
+	turret.initialise(self, team.team)
 
 
 func _physics_process(delta):
@@ -38,9 +44,7 @@ func _physics_process(delta):
 		if vel_direction != 0:
 			velocity = Vector2.RIGHT.rotated(rotation) * vel_direction * speed
 			velocity = move_and_slide(velocity, Vector2.ZERO)
-		
-		# feel like i will need to move the actual firing code to a separate location
-		# so it can be reused for enemies also
+
 		if turret != null:
 			turret.look_at(get_global_mouse_position())
 			
@@ -49,6 +53,10 @@ func _physics_process(delta):
 
 	else:
 		queue_free()
+
+
+func get_team() -> int:
+	return team.team
 
 
 func handle_hit():

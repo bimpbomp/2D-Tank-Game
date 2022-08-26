@@ -9,6 +9,8 @@ onready var kill_timer = $KillTimer
 
 
 var direction := Vector2.ZERO
+var bullet_owner = null
+var team: int = -1
 
 
 func _ready():
@@ -33,6 +35,10 @@ func _on_KillTimer_timeout():
 
 
 func _on_Bullet_body_entered(body: Node):
+	if body == bullet_owner:
+		return
+	
 	if body.has_method("handle_hit"):
-		body.handle_hit()
+		if body.has_method("get_team") and body.get_team() != team:
+			body.handle_hit()
 		queue_free()
