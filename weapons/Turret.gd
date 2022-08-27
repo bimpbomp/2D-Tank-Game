@@ -58,12 +58,10 @@ func fire():
 		current_ammo -= 1
 		
 		if current_ammo <= 0:
-			print("out of ammo")
 			emit_signal("turret_out_of_ammo")
 
 
 func start_reload():
-	print("starting reload")
 	reload_timer.start()
 	current_ammo = max_ammo
 
