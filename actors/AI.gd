@@ -35,34 +35,35 @@ func _ready():
 
 
 func _physics_process(delta):
-	match current_state:
-		State.PATROL:
-			if not patrol_location_reached:
-				turret.reset_rotation()
-				actor.move_and_slide(actor_velocity)
-				actor.rotate_towards(patrol_location)
-				if actor.global_position.distance_to(patrol_location) < 5:
-					patrol_location_reached = true
-					actor_velocity = Vector2.ZERO
-					patrol_timer.start()
-		State.ENGAGE:
-			if target != null and turret != null:
-				turret.rotate_towards(target.global_position)
-				
-				var angle_to_player = turret.global_position.direction_to(target.global_position).angle()
-				if abs(turret.global_rotation - angle_to_player) < 0.1:
-					turret.fire()
-			else:
-				print("Player or turret for enemy is null in ENGAGE state")
-		_:
-			print("Error: state for enemy that shouldn't exist")
+	if is_instance_valid(self):
+		match current_state:
+			State.PATROL:
+				if not patrol_location_reached:
+					turret.reset_rotation()
+					actor.move_and_slide(actor_velocity)
+					actor.rotate_towards(patrol_location)
+					if actor.global_position.distance_to(patrol_location) < 5:
+						patrol_location_reached = true
+						actor_velocity = Vector2.ZERO
+						patrol_timer.start()
+			State.ENGAGE:
+				if target != null and turret != null:
+					turret.rotate_towards(target.global_position)
+					
+					var angle_to_player = turret.global_position.direction_to(target.global_position).angle()
+					if abs(turret.global_rotation - angle_to_player) < 0.1:
+						turret.fire()
+				else:
+					print("Player or turret for enemy is null in ENGAGE state")
+			_:
+				print("Unknown AI state, setting to default state of PATROL")
+				set_state(State.PATROL)
 
 
 func initialise(new_actor: KinematicBody2D, new_turret: Turret, new_team: int):
 	self.actor = new_actor
 	self.turret = new_turret
 	self.team = new_team
-	set_state(State.PATROL)
 
 
 func set_state(new_state: int):
