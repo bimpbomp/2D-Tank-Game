@@ -34,7 +34,7 @@ func _ready():
 	pass
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if is_instance_valid(self):
 		match current_state:
 			State.PATROL:
@@ -64,6 +64,8 @@ func initialise(new_actor: KinematicBody2D, new_turret: Turret, new_team: int):
 	self.actor = new_actor
 	self.turret = new_turret
 	self.team = new_team
+	
+	self.turret.connect("turret_out_of_ammo", self, "handle_reload")
 
 
 func set_state(new_state: int):
@@ -77,6 +79,10 @@ func set_state(new_state: int):
 		
 	current_state = new_state
 	emit_signal("state_changed", current_state)
+	
+	
+func handle_reload():
+	turret.start_reload()
 
 
 func _on_PatrolTimer_timeout():

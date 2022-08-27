@@ -19,6 +19,7 @@ onready var team = $Team
 
 func _ready():
 	turret.initialise(self, team.team)
+	self.turret.connect("turret_out_of_ammo", self, "handle_reload")
 
 
 func _physics_process(delta):
@@ -62,3 +63,6 @@ func get_team() -> int:
 func handle_hit():
 	health_stat.health -= 20
 	print("Player hit. Health ", health_stat.health)
+
+func handle_reload():
+	turret.start_reload()

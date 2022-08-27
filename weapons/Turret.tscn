@@ -54,3 +54,6 @@ one_shot = true
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 1 )
 anims/fire = SubResource( 2 )
+
+[node name="ReloadTimer" type="Timer" parent="."]
+one_shot = true
